@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dtos/register.dto';
+import { LoginUserDTO } from './dtos/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -14,5 +15,10 @@ export class AuthController {
   @Get('/verify-magic-link')
   async verifyNewUser(@Query('token') token: string) {
     await this.authService.verifyNewUser(token);
+  }
+
+  @Post('/login')
+  async logUserIn(@Body() data: LoginUserDTO) {
+    await this.authService.logTheUserIn(data);
   }
 }

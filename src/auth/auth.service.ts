@@ -1,9 +1,10 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dtos/register.dto';
 import { GenerateUsernameService } from 'src/global/generate_username/generate_username.service';
+import { LoginUserDTO } from './dtos/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -34,6 +35,11 @@ export class AuthService {
     } catch (err) {
       console.log(`mailer error: ${err}`);
     }
+
+    return {
+      success: true,
+      message: `magic link sent to ${data.email}`,
+    };
   }
 
   async verifyNewUser(token: string) {
@@ -42,7 +48,7 @@ export class AuthService {
       where: { email: payload.email },
     });
     if (!existing_user) {
-      const uniqueUsername = await this.gu_username.generate(payload.name)
+      const uniqueUsername = await this.gu_username.generate(payload.name);
       const new_user = await this.prisma.user.create({
         data: {
           name: payload.name,
@@ -62,5 +68,37 @@ export class AuthService {
         username: existing_user.username,
       });
     }
+  }
+
+  async logTheUserIn(data: LoginUserDTO) {
+    const the_user = await this.prisma.user.findUnique({
+      where: { email: data.email },
+    });
+    if (!the_user) {
+      throw new HttpException('user does not exist', 404);
+    }
+    const token = this.jwtService.sign({
+      email: data.email,
+    });
+    const magicLink = `${process.env.origin}/auth/verify-magic-link/?token=${token}`;
+    try {
+      this.mailerService.sendMail({
+        to: data.email,
+        subject: 'Nuna - Verify your email',
+        html: `
+        <h4>click the link below and verify your accaunt in easy way</h4>
+        <a href="${magicLink}"> Registrate </a>
+        <p> Click the magic Link in top </p>
+        `,
+      });
+      console.log(`Link successfully send to ${data.email}`);
+    } catch (err) {
+      console.log(`mailer error: ${err}`);
+    }
+
+    return {
+      success: true,
+      message: `magic link sent to ${data.email}`,
+    };
   }
 }
