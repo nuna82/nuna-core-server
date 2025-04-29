@@ -5,6 +5,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class GenerateUsernameService {
   constructor(private readonly prisma: PrismaService) {}
 
+  randomSuffix() {
+    return Math.floor(1000 + Math.random() * 9000);
+  }
+
   async generate(name: string) {
     let baseUsername = name
       .toLowerCase()
@@ -12,7 +16,6 @@ export class GenerateUsernameService {
       .replace(/[^a-z0-9]/g, '');
     let username = baseUsername;
     let isUnique = false;
-    let count = 0;
 
     while (!isUnique) {
       const existing_user = await this.prisma.user.findUnique({
@@ -21,9 +24,9 @@ export class GenerateUsernameService {
       if (!existing_user) {
         isUnique = true;
       } else {
-        count++;
-        username = `${baseUsername}${count}`;
+        username = `${baseUsername}${this.randomSuffix}`;
       }
     }
+    return username;
   }
 }
