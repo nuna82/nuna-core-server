@@ -27,6 +27,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/client": "^6.6.0",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "nodemailer": "^6.10.1",
     "passport": "^0.7.0",
