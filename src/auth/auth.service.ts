@@ -42,12 +42,24 @@ export class AuthService {
       where: { email: payload.email },
     });
     if (!existing_user) {
+      const uniqueUsername = await this.gu_username.generate(payload.name)
       const new_user = await this.prisma.user.create({
         data: {
           name: payload.name,
           email: payload.email,
-          username: await this.gu_username.generate(payload.name),
+          username: uniqueUsername,
         },
+      });
+      return this.jwtService.sign({
+        id: new_user.id,
+        email: new_user.email,
+        username: new_user.username,
+      });
+    } else {
+      return this.jwtService.sign({
+        id: existing_user.id,
+        email: existing_user.email,
+        username: existing_user.username,
       });
     }
   }
