@@ -15,13 +15,22 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
   name         String
-  email        String   @unique
-  username     String   @unique
+  email        String       @unique
+  username     String       @unique
   profile      String?
   banner       String?
-  verification Boolean  @default(false)
+  verification Boolean      @default(false)
   bio          String?
-  created_at   DateTime @default(now())
+  created_at   DateTime     @default(now())
+  UserProfile  UserProfile?
+}
+
+model UserProfile {
+  id        Int    @id @default(autoincrement())
+  original  String
+  thumbnail String
+  user_id   Int    @unique
+  user      User   @relation(fields: [user_id], references: [id])
 }

@@ -1,18 +1,26 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString, ValidateNested } from 'class-validator';
+import { UserProfileDTO } from './user-profile.dto';
+import { Type } from 'class-transformer';
 
 export class UpdateUserDto {
+  @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
+  @IsOptional()
   @IsString()
-  username: string;
+  username?: string;
 
-  @IsString()
-  profile: string;
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => UserProfileDTO)
+  profile?: UserProfileDTO;
 
+  @IsOptional()
   @IsString()
-  banner: string;
+  banner?: string;
 
+  @IsOptional()
   @IsString()
-  bio: string;
+  bio?: string;
 }

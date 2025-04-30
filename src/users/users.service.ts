@@ -17,10 +17,9 @@ export class UsersService {
 
   async update(data: UpdateUserDto, req: RequestWithUser) {
     const user_id = req.user.id;
-    const edited_user = await this.prisma.user.update({
-      where: { id: user_id },
-      data: data,
-    });
+    // const edited_user = await this.prisma.user.update({
+    //   where: { id: user_id },
+    // });
   }
 
   remove(id: number) {
