@@ -20,22 +20,22 @@ export class AuthController {
 
   @Post('/register')
   async registerUser(@Body() data: RegisterDto) {
-    await this.authService.registerNewUser(data);
+    return await this.authService.registerNewUser(data);
   }
 
   @Get('/verify-magic-link')
   async verifyNewUser(@Query('token') token: string) {
-    await this.authService.verifyNewUser(token);
+    return await this.authService.verifyNewUser(token);
   }
 
   @Post('/login')
   async logUserIn(@Body() data: LoginUserDTO) {
-    await this.authService.logTheUserIn(data);
+    return await this.authService.logTheUserIn(data);
   }
 
   @UseGuards(AuthGuard)
   @Get('/profile')
   async getUsersProfileData(@Req() req: RequestWithUser) {
-    await this.authService.getUsersProfile(req);
+    return await this.authService.getUsersProfile(req);
   }
 }

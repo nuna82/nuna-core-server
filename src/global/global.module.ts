@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { GenerateUsernameService } from './generate_username/generate_username.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  providers: [GenerateUsernameService]
+  imports: [PrismaModule],
+  providers: [GenerateUsernameService],
+  exports: [GenerateUsernameService],
 })
 export class GlobalModule {}

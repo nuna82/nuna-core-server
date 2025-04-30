@@ -5,7 +5,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dtos/register.dto';
 import { GenerateUsernameService } from 'src/global/generate_username/generate_username.service';
 import { LoginUserDTO } from './dtos/login.dto';
-import { Request } from 'express';
 import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 
 @Injectable()
@@ -22,7 +21,7 @@ export class AuthService {
       email: data.email,
       name: data.name,
     });
-    const magicLink = `${process.env.origin}/auth/verify-magic-link/?token=${token}`;
+    const magicLink = `${process.env.ORIGIN}/auth/verify-magic-link/?token=${token}`;
     try {
       this.mailerService.sendMail({
         to: data.email,
@@ -82,7 +81,7 @@ export class AuthService {
     const token = this.jwtService.sign({
       email: data.email,
     });
-    const magicLink = `${process.env.origin}/auth/verify-magic-link/?token=${token}`;
+    const magicLink = `${process.env.ORIGIN}/auth/verify-magic-link/?token=${token}`;
     try {
       this.mailerService.sendMail({
         to: data.email,
