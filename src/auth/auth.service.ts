@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dtos/register.dto';
 import { GenerateUsernameService } from 'src/global/generate_username/generate_username.service';
 import { LoginUserDTO } from './dtos/login.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -100,5 +101,10 @@ export class AuthService {
       success: true,
       message: `magic link sent to ${data.email}`,
     };
+  }
+
+  async getUsersProfile(req) {
+    const user_data = req.user;
+    const the_user = await this.prisma.user.findUnique({where: {id: user_data.id}})
   }
 }
