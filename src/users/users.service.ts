@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 
 @Injectable()
 export class UsersService {
@@ -14,8 +15,12 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, data: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(data: UpdateUserDto, req: RequestWithUser) {
+    const user_id = req.user.id;
+    const edited_user = await this.prisma.user.update({
+      where: { id: user_id },
+      data: data,
+    });
   }
 
   remove(id: number) {
