@@ -27,6 +27,7 @@ model User {
   post_count   Int          @default(0)
   posts        Post[]
   comments     Comment[]
+  supports     Support[]
 }
 
 model UserProfile {
@@ -46,6 +47,7 @@ model Post {
   creator_id  Int
   creator     User      @relation(fields: [creator_id], references: [id])
   comments    Comment[]
+  supports    Support[]
 }
 
 model Comment {
@@ -58,5 +60,14 @@ model Comment {
   parent     Comment?  @relation("CommentReplies", fields: [parent_id], references: [id])
   replies    Comment[] @relation("CommentReplies")
   content    String
+  link       String
   created_at DateTime  @default(now())
+}
+
+model Support {
+  id           Int  @id @default(autoincrement())
+  supporter_id Int
+  supporter    User @relation(fields: [supporter_id], references: [id])
+  post_id      Int
+  post         Post @relation(fields: [post_id], references: [id])
 }
