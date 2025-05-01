@@ -24,6 +24,9 @@ model User {
   verification Boolean      @default(false)
   bio          String?
   created_at   DateTime     @default(now())
+  post_count   Int          @default(0)
+  posts        Post[]
+  comments     Comment[]
 }
 
 model UserProfile {
@@ -32,4 +35,28 @@ model UserProfile {
   thumbnail String
   user_id   Int    @unique
   user      User   @relation(fields: [user_id], references: [id])
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  friendly_id String
+  created_at  DateTime  @default(now())
+  creator_id  Int
+  creator     User      @relation(fields: [creator_id], references: [id])
+  comments    Comment[]
+}
+
+model Comment {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  user       User      @relation(fields: [user_id], references: [id])
+  post_id    Int
+  post       Post      @relation(fields: [post_id], references: [id])
+  parent_id  Int
+  parent     Comment?  @relation("CommentReplies", fields: [parent_id], references: [id])
+  replies    Comment[] @relation("CommentReplies")
+  content    String
+  created_at DateTime  @default(now())
 }
