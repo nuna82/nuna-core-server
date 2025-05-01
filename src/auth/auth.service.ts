@@ -117,6 +117,9 @@ export class AuthService {
     const user_data = req.user;
     const the_user = await this.prisma.user.findUnique({
       where: { id: user_data.id },
+      include: {
+        profile: true,
+      },
     });
     if (!the_user) {
       throw new HttpException('invalid Token or user does not exist', 404);

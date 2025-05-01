@@ -8,7 +8,12 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOne(id: number) {
-    const user = await this.prisma.user.findUnique({ where: { id: id } });
+    const user = await this.prisma.user.findUnique({
+      where: { id: id },
+      include: {
+        profile: true,
+      },
+    });
     if (!user) {
       throw new HttpException('user is not defined', 404);
     }
@@ -37,6 +42,9 @@ export class UsersService {
               },
             }
           : undefined,
+      },
+      include: {
+        profile: true,
       },
     });
     if (!updated_user) {
