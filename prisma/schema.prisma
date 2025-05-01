@@ -39,15 +39,26 @@ model UserProfile {
 }
 
 model Post {
-  id          Int       @id @default(autoincrement())
-  title       String
-  description String
-  friendly_id String
-  created_at  DateTime  @default(now())
-  creator_id  Int
-  creator     User      @relation(fields: [creator_id], references: [id])
-  comments    Comment[]
-  supports    Support[]
+  id            Int         @id @default(autoincrement())
+  title         String
+  description   String
+  friendly_id   String
+  created_at    DateTime    @default(now())
+  creator_id    Int
+  creator       User        @relation(fields: [creator_id], references: [id])
+  comment_count Int         @default(0)
+  comments      Comment[]
+  support_count Int         @default(0)
+  supports      Support[]
+  images        PostImage[]
+}
+
+model PostImage {
+  id        Int    @id @default(autoincrement())
+  post_id   Int
+  post      Post   @relation(fields: [post_id], references: [id])
+  original  String
+  thumbnail String
 }
 
 model Comment {
