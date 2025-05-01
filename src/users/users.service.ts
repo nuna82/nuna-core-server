@@ -16,10 +16,11 @@ export class UsersService {
   }
 
   async update(data: UpdateUserDto, req: RequestWithUser) {
-    const user_id = req.user.id;
+    const user = req.user;
+    console.log(user);
     const { profile, ...user_data } = data;
     const updated_user = await this.prisma.user.update({
-      where: { id: user_id },
+      where: { id: user.id },
       data: {
         ...user_data,
         profile: profile

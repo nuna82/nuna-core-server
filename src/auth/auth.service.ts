@@ -57,17 +57,27 @@ export class AuthService {
           username: uniqueUsername,
         },
       });
-      return this.jwtService.sign({
-        id: new_user.id,
-        email: new_user.email,
-        username: new_user.username,
-      });
+      return this.jwtService.sign(
+        {
+          id: new_user.id,
+          email: new_user.email,
+          username: new_user.username,
+        },
+        {
+          expiresIn: '5d',
+        },
+      );
     } else {
-      return this.jwtService.sign({
-        id: existing_user.id,
-        email: existing_user.email,
-        username: existing_user.username,
-      });
+      return this.jwtService.sign(
+        {
+          id: existing_user.id,
+          email: existing_user.email,
+          username: existing_user.username,
+        },
+        {
+          expiresIn: '5d',
+        },
+      );
     }
   }
 
