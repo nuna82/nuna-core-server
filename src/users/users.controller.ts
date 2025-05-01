@@ -2,11 +2,11 @@ import {
   Controller,
   Get,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
   Req,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -23,7 +23,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
-  @Patch('/update')
+  @Put('/update')
   update(@Body() data: UpdateUserDto, @Req() req: RequestWithUser) {
     return this.usersService.update(data, req);
   }

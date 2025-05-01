@@ -19,12 +19,11 @@ model User {
   name         String
   email        String       @unique
   username     String       @unique
-  profile      String?
+  profile      UserProfile?
   banner       String?
   verification Boolean      @default(false)
   bio          String?
   created_at   DateTime     @default(now())
-  UserProfile  UserProfile?
 }
 
 model UserProfile {

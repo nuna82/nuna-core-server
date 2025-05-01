@@ -17,6 +17,34 @@ export class UsersService {
 
   async update(data: UpdateUserDto, req: RequestWithUser) {
     const user_id = req.user.id;
+    const { profile, ...user_data } = data;
+    const updated_user = await this.prisma.user.update({
+      where: { id: user_id },
+      data: {
+        ...user_data,
+        profile: profile
+          ? {
+              upsert: {
+                create: {
+                  original: profile.original ?? '',
+                  thumbnail: profile.thumbnail ?? '',
+                },
+                update: {
+                  original: profile.original ?? undefined,
+                  thumbnail: profile.thumbnail ?? undefined,
+                },
+              },
+            }
+          : undefined,
+      },
+    });
+    if (!updated_user) {
+      throw new HttpException(
+        'external server error or user is not defined',
+        404,
+      );
+    }
+    return updated_user;
   }
 
   remove(id: number) {
