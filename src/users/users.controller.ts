@@ -7,6 +7,7 @@ import {
   UseGuards,
   Req,
   Put,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -17,19 +18,29 @@ import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get('all')
+  findAll() {
+    return this.usersService.findAll();
+  }
+
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.usersService.findOne(+id);
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
   }
 
   @UseGuards(AuthGuard)
-  @Put('/update')
-  update(@Body() data: UpdateUserDto, @Req() req: RequestWithUser) {
-    return this.usersService.update(data, req);
+  @Put('/update/:id')
+  update(
+    @Query('id') id: string,
+    @Body() data: UpdateUserDto,
+    @Req() req: RequestWithUser,
+  ) {
+    return this.usersService.update(+id, data, req);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @UseGuards(AuthGuard)
+  @Delete('/delete/:id')
+  remove(@Param('id') id: string, @Req() req: RequestWithUser) {
+    return this.usersService.remove(+id, req);
   }
 }

@@ -14,13 +14,10 @@ export class AuthGuard implements CanActivate {
       return false;
     }
     const token = authHeader.split(' ')[1];
-    console.log(token);
 
     try {
       const decoded_user_data = this.jwtService.verify(token);
       request['user'] = decoded_user_data;
-      console.log(decoded_user_data);
-
       return true;
     } catch (err) {
       console.log(err);

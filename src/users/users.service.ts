@@ -7,6 +7,18 @@ import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findAll() {
+    const users = this.prisma.user.findMany({
+      include: {
+        profile: true,
+      },
+    });
+    if (!users) {
+      throw new HttpException('enternal server error', 404);
+    }
+    return users;
+  }
+
   async findOne(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: id },
@@ -20,9 +32,14 @@ export class UsersService {
     return user;
   }
 
-  async update(data: UpdateUserDto, req: RequestWithUser) {
+  async update(id: number, data: UpdateUserDto, req: RequestWithUser) {
     const user = req.user;
-    console.log(user);
+    if (user.id !== id) {
+      throw new HttpException(
+        'Id does not match with id provided in token',
+        404,
+      );
+    }
     const { profile, ...user_data } = data;
     const updated_user = await this.prisma.user.update({
       where: { id: user.id },
@@ -56,7 +73,19 @@ export class UsersService {
     return updated_user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number, req: RequestWithUser) {
+    const user_id = req.user.id;
+    if (id !== user_id) {
+      throw new HttpException(
+        'Id does not match with id provided in token',
+        404,
+      );
+    }
+    const removed_user = await this.prisma.user.delete({
+      where: { id: user_id },
+    });
+    if (!removed_user) {
+      throw new HttpException('internal server error', 404);
+    }
   }
 }
