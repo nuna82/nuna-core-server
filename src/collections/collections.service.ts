@@ -58,8 +58,7 @@ export class CollectionsService {
   }
 
   async update(id: number, req: RequestWithUser, data: UpdateCollectionDto) {
-    const user = req.user;
-    const user_id = user.id;
+    const user_id = req.user.id;
     try {
       const updated_collection = await this.prisma.collection.update({
         where: { id: id, creator_id: user_id },
@@ -71,6 +70,21 @@ export class CollectionsService {
         throw new HttpException('server error', 404);
       }
       return updated_collection;
+    } catch (err) {
+      throw new HttpException(`error in collection section ${err}`, 404);
+    }
+  }
+
+  async remove(id: number, req: RequestWithUser) {
+    const user_id = req.user.id;
+    try {
+      await this.prisma.collection.delete({
+        where: { id: id, creator_id: user_id },
+      });
+      return {
+        success: true,
+        message: 'collection updated',
+      };
     } catch (err) {
       throw new HttpException(`error in collection section ${err}`, 404);
     }
