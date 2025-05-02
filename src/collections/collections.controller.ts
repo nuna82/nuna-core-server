@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 import { CreateCollectionDto } from './dto/create_collection.dto';
@@ -15,5 +23,16 @@ export class CollectionsController {
     @Body() data: CreateCollectionDto,
   ) {
     return this.collectionsService.create(req, data);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('mine')
+  getMyCollections(@Req() req: RequestWithUser) {
+    return this.collectionsService.getMyCollections(req);
+  }
+
+  @Get(':id')
+  getCollectionById(@Query('id') id: string) {
+    return this.collectionsService.getCollectionById(+id);
   }
 }

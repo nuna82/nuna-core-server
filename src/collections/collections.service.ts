@@ -31,4 +31,25 @@ export class CollectionsService {
     }
     return new_collection;
   }
+
+  async getMyCollections(req: RequestWithUser) {
+    const user_id = req.user.id;
+    const collections = await this.prisma.collection.findMany({
+      where: { creator_id: user_id },
+    });
+    if (!collections) {
+      throw new HttpException('server error', 404);
+    }
+    return collections;
+  }
+
+  async getCollectionById(id: number) {
+    const collection = await this.prisma.collection.findUnique({
+      where: { id: id },
+    });
+    if (!collection) {
+      throw new HttpException('collection does not exist', 404);
+    }
+    return collection;
+  }
 }
