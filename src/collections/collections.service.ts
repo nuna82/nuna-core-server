@@ -46,6 +46,9 @@ export class CollectionsService {
   async getCollectionById(id: number) {
     const collection = await this.prisma.collection.findUnique({
       where: { id: id },
+      include: {
+        creator: true,
+      },
     });
     if (!collection) {
       throw new HttpException('collection does not exist', 404);

@@ -2,8 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
-  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -32,7 +32,7 @@ export class CollectionsController {
   }
 
   @Get(':id')
-  getCollectionById(@Query('id') id: string) {
+  getCollectionById(@Param('id') id: string) {
     return this.collectionsService.getCollectionById(+id);
   }
 }
