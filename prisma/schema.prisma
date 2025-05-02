@@ -15,19 +15,21 @@ datasource db {
 }
 
 model User {
-  id           Int          @id @default(autoincrement())
-  name         String
-  email        String       @unique
-  username     String       @unique
-  profile      UserProfile?
-  banner       String?
-  verification Boolean      @default(false)
-  bio          String?
-  created_at   DateTime     @default(now())
-  post_count   Int          @default(0)
-  posts        Post[]
-  comments     Comment[]
-  supports     Support[]
+  id               Int          @id @default(autoincrement())
+  name             String
+  email            String       @unique
+  username         String       @unique
+  profile          UserProfile?
+  banner           String?
+  verification     Boolean      @default(false)
+  bio              String?
+  created_at       DateTime     @default(now())
+  post_count       Int          @default(0)
+  posts            Post[]
+  comments         Comment[]
+  supports         Support[]
+  collection_count Int          @default(0)
+  collections      Collection[]
 }
 
 model UserProfile {
@@ -51,6 +53,8 @@ model Post {
   support_count Int         @default(0)
   supports      Support[]
   images        PostImage[]
+  collection_id Int?
+  collection    Collection? @relation(fields: [collection_id], references: [id])
 }
 
 model PostImage {
@@ -81,4 +85,15 @@ model Support {
   supporter    User @relation(fields: [supporter_id], references: [id])
   post_id      Int
   post         Post @relation(fields: [post_id], references: [id])
+}
+
+model Collection {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  banner      String
+  post_count  Int    @default(0)
+  posts       Post[]
+  creator_id  Int
+  creator     User   @relation(fields: [creator_id], references: [id])
 }
