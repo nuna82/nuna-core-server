@@ -7,9 +7,10 @@ import { MailersModule } from './mailers/mailers.module';
 import { AppJwtModule } from './jwt/jwt.module';
 import { GlobalModule } from './global/global.module';
 import { UsersModule } from './users/users.module';
+import { CollectionsModule } from './collections/collections.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, MailersModule, AppJwtModule, GlobalModule, UsersModule],
+  imports: [PrismaModule, AuthModule, MailersModule, AppJwtModule, GlobalModule, UsersModule, CollectionsModule],
   controllers: [AppController],
   providers: [AppService],
 })
