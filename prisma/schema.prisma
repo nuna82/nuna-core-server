@@ -30,6 +30,7 @@ model User {
   supports         Support[]
   collection_count Int          @default(0)
   collections      Collection[]
+  bookmarks        Bookmark[]
 }
 
 model UserProfile {
@@ -88,12 +89,22 @@ model Support {
 }
 
 model Collection {
-  id          Int    @id @default(autoincrement())
-  title       String
-  description String
-  banner      String
-  post_count  Int    @default(0)
-  posts       Post[]
-  creator_id  Int
-  creator     User   @relation(fields: [creator_id], references: [id])
+  id             Int        @id @default(autoincrement())
+  title          String
+  description    String
+  banner         String
+  post_count     Int        @default(0)
+  posts          Post[]
+  creator_id     Int
+  creator        User       @relation(fields: [creator_id], references: [id])
+  bookmark_count Int        @default(0)
+  bookmarks      Bookmark[]
+}
+
+model Bookmark {
+  id            Int        @id @default(autoincrement())
+  saver_id      Int
+  saver         User       @relation(fields: [saver_id], references: [id])
+  collection_id Int
+  collection    Collection @relation(fields: [collection_id], references: [id])
 }
