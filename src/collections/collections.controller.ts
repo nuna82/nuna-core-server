@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -46,5 +47,11 @@ export class CollectionsController {
     @Body() data: UpdateCollectionDto,
   ) {
     return this.collectionsService.update(+id, req, data);
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('remove/:id')
+  removeCollection(@Param('id') id: string, @Req() req: RequestWithUser) {
+    this.collectionsService.remove(+id, req);
   }
 }
