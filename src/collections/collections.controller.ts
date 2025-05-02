@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -11,6 +12,7 @@ import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 import { CreateCollectionDto } from './dto/create_collection.dto';
 import { CollectionsService } from './collections.service';
+import { UpdateCollectionDto } from './dto/update_collection.dto';
 
 @Controller('collections')
 export class CollectionsController {
@@ -34,5 +36,15 @@ export class CollectionsController {
   @Get(':id')
   getCollectionById(@Param('id') id: string) {
     return this.collectionsService.getCollectionById(+id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('update/:id')
+  updateCollection(
+    @Param('id') id: string,
+    @Req() req: RequestWithUser,
+    @Body() data: UpdateCollectionDto,
+  ) {
+    return this.collectionsService.update(+id, req, data);
   }
 }

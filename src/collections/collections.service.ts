@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCollectionDto } from './dto/create_collection.dto';
+import { UpdateCollectionDto } from './dto/update_collection.dto';
 
 @Injectable()
 export class CollectionsService {
@@ -54,5 +55,24 @@ export class CollectionsService {
       throw new HttpException('collection does not exist', 404);
     }
     return collection;
+  }
+
+  async update(id: number, req: RequestWithUser, data: UpdateCollectionDto) {
+    const user = req.user;
+    const user_id = user.id;
+    try {
+      const updated_collection = await this.prisma.collection.update({
+        where: { id: id, creator_id: user_id },
+        data: {
+          ...data,
+        },
+      });
+      if (!updated_collection) {
+        throw new HttpException('server error', 404);
+      }
+      return updated_collection;
+    } catch (err) {
+      throw new HttpException(`error in collection section ${err}`, 404);
+    }
   }
 }
