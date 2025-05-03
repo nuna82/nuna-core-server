@@ -41,12 +41,36 @@ export class PostsService {
     }
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findMany(skip: number, take: number) {
+    if (skip > take) {
+      throw new HttpException('take should be greater then skip', 404);
+    }
+    const posts = await this.prisma.post.findMany({
+      skip,
+      take,
+      include: {
+        images: true,
+        creator: true,
+      },
+    });
+    if (!posts) {
+      throw new HttpException('error in posts section', 404);
+    }
+    return posts;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number) {
+    const post = await this.prisma.post.findUnique({
+      where: { id: id },
+      include: {
+        images: true,
+        creator: true,
+      },
+    });
+    if (!post) {
+      throw new HttpException('post does not found', 404);
+    }
+    return post;
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {

@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -25,9 +26,9 @@ export class PostsController {
     return this.postsService.create(req, dto);
   }
 
-  @Get()
-  findAll() {
-    return this.postsService.findAll();
+  @Get('many')
+  findMany(@Query('skip') skip: string, @Query('take') take: string) {
+    return this.postsService.findMany(+skip || 0, +take || 10);
   }
 
   @Get(':id')
