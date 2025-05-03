@@ -8,10 +8,29 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PostsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(req: RequestWithUser, dto: CreatePostDto) {
+  async create(req: RequestWithUser, data: CreatePostDto) {
     const user_id = req.user.id;
+    const { images, collection_id, ...post_data } = data;
     try {
-      // const new_post = await this.prisma.post.create()
+      const new_post = await this.prisma.post.create({
+        data: {
+          ...post_data,
+          creator: { connect: { id: user_id } },
+          ...(collection_id && {
+            collection: { connect: { id: collection_id } },
+          }),
+          images: {
+            create: images.map((image) => ({
+              original: image.original,
+              thumbnail: image.thumbnail,
+            })),
+          },
+        },
+        include: {
+          images: true,
+        },
+      });
+      return new_post;
     } catch (err) {
       throw new HttpException('error in create post section', 404);
     }
