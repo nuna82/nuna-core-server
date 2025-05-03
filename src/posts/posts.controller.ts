@@ -36,13 +36,18 @@ export class PostsController {
     return this.postsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(+id, updatePostDto);
+  @UseGuards(AuthGuard)
+  @Patch('/update/:id')
+  update(
+    @Req() req: RequestWithUser,
+    @Param('id') id: string,
+    @Body() data: UpdatePostDto,
+  ) {
+    return this.postsService.update(req, +id, data);
   }
 
   @UseGuards(AuthGuard)
-  @Delete(':id')
+  @Delete('remove/:id')
   remove(@Req() req: RequestWithUser, @Param('id') id: string) {
     return this.postsService.remove(req, +id);
   }

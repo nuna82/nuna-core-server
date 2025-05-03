@@ -65,6 +65,7 @@ export class PostsService {
       include: {
         images: true,
         creator: true,
+        collection: true,
       },
     });
     if (!post) {
@@ -73,17 +74,37 @@ export class PostsService {
     return post;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(req: RequestWithUser, id: number, data: UpdatePostDto) {
+    const user_id = req.user.id;
+    try {
+      const { collection_id, ...post_data } = data;
+      const updated_post = await this.prisma.post.update({
+        where: { id: id, creator_id: user_id },
+        data: {
+          ...post_data,
+          ...(collection_id && {
+            collection: { connect: { id: collection_id } },
+          }),
+        },
+        include: {
+          images: true,
+          collection: true,
+          creator: true,
+        },
+      });
+      return updated_post;
+    } catch (err) {
+      throw new HttpException('error in post updating section', 404);
+    }
   }
 
   async remove(req: RequestWithUser, id: number) {
     const user_id = req.user.id;
     try {
-      const deleted_user = await this.prisma.post.delete({
+      const deleted_post = await this.prisma.post.delete({
         where: { id: id, creator_id: user_id },
       });
-      return deleted_user;
+      return deleted_post;
     } catch (err) {
       throw new HttpException(`error in post removing setion:`, 404);
     }
