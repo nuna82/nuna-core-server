@@ -33,8 +33,24 @@ export class PostsService {
         },
         include: {
           images: true,
+          collection: true,
+          creator: true,
         },
       });
+      await this.prisma.user.update({
+        where: { id: user_id },
+        data: {
+          post_count: {
+            increment: 1,
+          },
+        },
+      });
+      if (collection_id) {
+        await this.prisma.collection.update({
+          where: { id: collection_id },
+          data: { post_count: { increment: 1 } },
+        });
+      }
       return new_post;
     } catch (err) {
       throw new HttpException('error in create post section', 404);
@@ -50,6 +66,7 @@ export class PostsService {
       take,
       include: {
         images: true,
+        collection: true,
         creator: true,
       },
     });
@@ -64,8 +81,8 @@ export class PostsService {
       where: { id: id },
       include: {
         images: true,
-        creator: true,
         collection: true,
+        creator: true,
       },
     });
     if (!post) {
@@ -92,6 +109,12 @@ export class PostsService {
           creator: true,
         },
       });
+      // if (collection_id) {
+      //   await this.prisma.collection.update({
+      //     where: { id: collection_id },
+      //     data: { post_count: { increment: 1 } },
+      //   });
+      // }
       return updated_post;
     } catch (err) {
       throw new HttpException('error in post updating section', 404);
