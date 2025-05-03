@@ -1,11 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PostsService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(req: RequestWithUser, dto: CreatePostDto) {
+    const user_id = req.user.id;
+    try {
+      // const new_post = await this.prisma.post.create()
+    } catch (err) {
+      throw new HttpException('error in create post section', 404);
+    }
   }
 
   findAll() {
