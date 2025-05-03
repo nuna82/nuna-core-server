@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { AppJwtModule } from 'src/jwt/jwt.module';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { GlobalModule } from 'src/global/global.module';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  imports: [AppJwtModule, PrismaService],
+  imports: [AppJwtModule, PrismaModule, GlobalModule],
   controllers: [PostsController],
   providers: [PostsService],
 })

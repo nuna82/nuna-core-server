@@ -3,10 +3,14 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { GenerateFriendlyIdService } from 'src/global/generate_friendly_id/generate_friendly_id.service';
 
 @Injectable()
 export class PostsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly fiendlyId: GenerateFriendlyIdService,
+  ) {}
 
   async create(req: RequestWithUser, data: CreatePostDto) {
     const user_id = req.user.id;
@@ -15,6 +19,7 @@ export class PostsService {
       const new_post = await this.prisma.post.create({
         data: {
           ...post_data,
+          friendly_id: this.fiendlyId.generate(post_data.title),
           creator: { connect: { id: user_id } },
           ...(collection_id && {
             collection: { connect: { id: collection_id } },
