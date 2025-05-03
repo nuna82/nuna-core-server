@@ -77,7 +77,15 @@ export class PostsService {
     return `This action updates a #${id} post`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(req: RequestWithUser, id: number) {
+    const user_id = req.user.id;
+    try {
+      const deleted_user = await this.prisma.post.delete({
+        where: { id: id, creator_id: user_id },
+      });
+      return deleted_user;
+    } catch (err) {
+      throw new HttpException(`error in post removing setion:`, 404);
+    }
   }
 }
