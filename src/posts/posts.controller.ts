@@ -3,12 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
   Req,
   Query,
+  Put,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -37,7 +37,7 @@ export class PostsController {
   }
 
   @UseGuards(AuthGuard)
-  @Patch('/update/:id')
+  @Put('/update/:id')
   update(
     @Req() req: RequestWithUser,
     @Param('id') id: string,
