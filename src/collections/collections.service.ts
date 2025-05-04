@@ -5,11 +5,12 @@ import { CreateCollectionDto } from './dto/create_collection.dto';
 import { UpdateCollectionDto } from './dto/update_collection.dto';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { QUEUE_NAME } from 'src/constants';
 
 @Injectable()
 export class CollectionsService {
   constructor(
-    @InjectQueue('nunalands') private nunaland: Queue,
+    @InjectQueue(QUEUE_NAME) private readonly nunaland: Queue,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -26,14 +27,7 @@ export class CollectionsService {
     if (!new_collection) {
       throw new HttpException('server error', 404);
     } else {
-      await this.prisma.user.update({
-        where: { id: user.id },
-        data: {
-          collection_count: {
-            increment: 1,
-          },
-        },
-      });
+      await this.nunaland.add('ICCProcessor', { user_id: user.id });
     }
     return new_collection;
   }

@@ -1,5 +1,6 @@
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
+import { QUEUE_NAME } from 'src/constants';
 
 @Module({
   imports: [
@@ -10,7 +11,7 @@ import { Module } from '@nestjs/common';
       },
     }),
     BullModule.registerQueue({
-      name: 'nunalands',
+      name: QUEUE_NAME,
     }),
   ],
   exports: [BullModule],

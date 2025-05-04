@@ -12,7 +12,17 @@ import { PostsModule } from './posts/posts.module';
 import { JobsModule } from './jobs/jobs.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, MailersModule, AppJwtModule, GlobalModule, UsersModule, CollectionsModule, PostsModule, JobsModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    MailersModule,
+    AppJwtModule,
+    GlobalModule,
+    UsersModule,
+    CollectionsModule,
+    PostsModule,
+    JobsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
