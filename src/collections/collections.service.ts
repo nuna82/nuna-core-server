@@ -3,6 +3,8 @@ import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCollectionDto } from './dto/create_collection.dto';
 import { UpdateCollectionDto } from './dto/update_collection.dto';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class CollectionsService {

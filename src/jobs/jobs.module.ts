@@ -10,7 +10,7 @@ import { Module } from '@nestjs/common';
       },
     }),
     BullModule.registerQueue({
-      name: 'nunaland',
+      name: 'nunalands',
     }),
   ],
   exports: [BullModule],
