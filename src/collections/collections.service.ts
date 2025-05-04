@@ -8,7 +8,10 @@ import { Queue } from 'bull';
 
 @Injectable()
 export class CollectionsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @InjectQueue('nunalands') private nunaland: Queue,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async create(req: RequestWithUser, data: CreateCollectionDto) {
     const user = req.user;
