@@ -49,10 +49,14 @@ export class PostsService {
         console.log('🌀 CPCProcessor Job added to queue for user_id:', user_id);
       }
       if (collection_id) {
-        await this.prisma.collection.update({
-          where: { id: collection_id },
-          data: { post_count: { increment: 1 } },
+        await this.nunaland.add('CCPCProcessor', {
+          collection_id: collection_id,
+          increment: true,
         });
+        console.log(
+          '🌀 CCPCProcessor Job added to queue for collection_id:',
+          collection_id,
+        );
       }
       return new_post;
     } catch (err) {
@@ -112,6 +116,16 @@ export class PostsService {
           creator: true,
         },
       });
+      if (updated_post.collection_id) {
+        await this.nunaland.add('CCPCProcessor', {
+          collection_id: updated_post.collection_id,
+          increment: true,
+        });
+        console.log(
+          '🌀 CCPCProcessor Job added to queue for collection_id:',
+          updated_post.collection_id,
+        );
+      }
       return updated_post;
     } catch (err) {
       throw new HttpException('error in post updating section', 404);
@@ -124,6 +138,23 @@ export class PostsService {
       const deleted_post = await this.prisma.post.delete({
         where: { id: id, creator_id: user_id },
       });
+      if (deleted_post) {
+        await this.nunaland.add('CPCProcessor', {
+          user_id: deleted_post.creator_id,
+          increment: false,
+        });
+        console.log('🌀 CPCProcessor Job added to queue for user_id:', user_id);
+      }
+      if (deleted_post.collection_id) {
+        await this.nunaland.add('CCPCProcessor', {
+          collection_id: deleted_post.collection_id,
+          increment: false,
+        });
+        console.log(
+          '🌀 CCPCProcessor Job added to queue for collection_id:',
+          deleted_post.collection_id,
+        );
+      }
       return deleted_post;
     } catch (err) {
       throw new HttpException(`error in post removing setion:`, 404);

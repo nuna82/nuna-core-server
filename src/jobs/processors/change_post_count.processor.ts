@@ -18,6 +18,7 @@ export class CPCProcessor {
             post_count: { increment: 1 },
           },
         });
+        console.log('✅ Post count incremented');
       } else {
         await this.prisma.user.update({
           where: { id: job.data.user_id },
@@ -25,8 +26,8 @@ export class CPCProcessor {
             post_count: { decrement: 1 },
           },
         });
+        console.log('✅ Post count decremented');
       }
-      console.log('✅ Collection count incremented');
     } catch (err) {
       console.log(`❌ DCCP Job failed:', err`);
     }
