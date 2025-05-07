@@ -26,7 +26,7 @@ export class CollectionsService {
     });
     if (new_collection) {
       await this.nunaland.add('ICCProcessor', { user_id: user.id });
-      console.log('🌀 Job added to queue for user_id:', user.id);
+      console.log('🌀 ICCProcessor Job added to queue for user_id:', user.id);
     } else {
       throw new HttpException('server error', 404);
     }
@@ -82,8 +82,8 @@ export class CollectionsService {
         where: { id: id, creator_id: user_id },
       });
       if (deleted_collection) {
-        await this.nunaland.add('ICCProcessor', { user_id: user_id });
-        console.log('🌀 Job added to queue for user_id:', user_id);
+        await this.nunaland.add('DCCProcessor', { user_id: user_id });
+        console.log('🌀 DCCProcessor Job added to queue for user_id:', user_id);
       }
       return {
         success: true,

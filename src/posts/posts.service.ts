@@ -4,12 +4,16 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GenerateFriendlyIdService } from 'src/global/generate_friendly_id/generate_friendly_id.service';
+import { InjectQueue } from '@nestjs/bull';
+import { QUEUE_NAME } from 'src/constants';
+import { Queue } from 'bull';
 
 @Injectable()
 export class PostsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly fiendlyId: GenerateFriendlyIdService,
+    @InjectQueue(QUEUE_NAME) private readonly nunaland: Queue,
   ) {}
 
   async create(req: RequestWithUser, data: CreatePostDto) {
@@ -37,14 +41,13 @@ export class PostsService {
           creator: true,
         },
       });
-      await this.prisma.user.update({
-        where: { id: user_id },
-        data: {
-          post_count: {
-            increment: 1,
-          },
-        },
-      });
+      if (new_post) {
+        await this.nunaland.add('CPCProcessor', {
+          user_id: user_id,
+          increment: true,
+        });
+        console.log('🌀 CPCProcessor Job added to queue for user_id:', user_id);
+      }
       if (collection_id) {
         await this.prisma.collection.update({
           where: { id: collection_id },
@@ -109,12 +112,6 @@ export class PostsService {
           creator: true,
         },
       });
-      // if (collection_id) {
-      //   await this.prisma.collection.update({
-      //     where: { id: collection_id },
-      //     data: { post_count: { increment: 1 } },
-      //   });
-      // }
       return updated_post;
     } catch (err) {
       throw new HttpException('error in post updating section', 404);
