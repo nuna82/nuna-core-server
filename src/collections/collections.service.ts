@@ -28,6 +28,7 @@ export class CollectionsService {
       throw new HttpException('server error', 404);
     } else {
       await this.nunaland.add('ICCProcessor', { user_id: user.id });
+      console.log('🌀 Job added to queue for user_id:', user.id);
     }
     return new_collection;
   }

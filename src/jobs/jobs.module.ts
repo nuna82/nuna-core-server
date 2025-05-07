@@ -1,6 +1,8 @@
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { QUEUE_NAME } from 'src/constants';
+import { ICCProcessor } from './processors/increment_collection_count.processor';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
   imports: [
@@ -13,7 +15,9 @@ import { QUEUE_NAME } from 'src/constants';
     BullModule.registerQueue({
       name: QUEUE_NAME,
     }),
+    PrismaModule,
   ],
+  providers: [ICCProcessor],
   exports: [BullModule],
 })
 export class JobsModule {}
