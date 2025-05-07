@@ -102,8 +102,19 @@ export class PostsService {
     const user_id = req.user.id;
     try {
       const { collection_id, ...post_data } = data;
+      const post = await this.prisma.post.findUnique({ where: { id: id } });
+      if (post && post.collection_id) {
+        await this.nunaland.add('CCPCProcessor', {
+          collection_id: post.collection_id,
+          increment: false,
+        });
+        console.log(
+          '🌀 CCPCProcessor Job added to queue for collection_id:',
+          post.collection_id,
+        );
+      }
       const updated_post = await this.prisma.post.update({
-        where: { id: id, creator_id: user_id },
+        where: { id: post?.id, creator_id: user_id },
         data: {
           ...post_data,
           ...(collection_id && {
@@ -116,7 +127,7 @@ export class PostsService {
           creator: true,
         },
       });
-      if (updated_post.collection_id) {
+      if (collection_id) {
         await this.nunaland.add('CCPCProcessor', {
           collection_id: updated_post.collection_id,
           increment: true,
