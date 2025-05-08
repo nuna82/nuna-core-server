@@ -6,6 +6,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { DCCProcessor } from './processors/decriment_collection_count.processor';
 import { CPCProcessor } from './processors/change_post_count.processor';
 import { CCPCProcessor } from './processors/change_collection_post_count.processor';
+import { WEProcessor } from './processors/welcome_email.processor';
 
 @Module({
   imports: [
@@ -20,7 +21,13 @@ import { CCPCProcessor } from './processors/change_collection_post_count.process
     }),
     PrismaModule,
   ],
-  providers: [ICCProcessor, DCCProcessor, CPCProcessor, CCPCProcessor],
+  providers: [
+    ICCProcessor,
+    DCCProcessor,
+    CPCProcessor,
+    CCPCProcessor,
+    WEProcessor,
+  ],
   exports: [BullModule],
 })
 export class JobsModule {}

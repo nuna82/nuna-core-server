@@ -6,6 +6,9 @@ import { RegisterDto } from './dtos/register.dto';
 import { GenerateUsernameService } from 'src/global/generate_username/generate_username.service';
 import { LoginUserDTO } from './dtos/login.dto';
 import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
+import { InjectQueue } from '@nestjs/bull';
+import { QUEUE_NAME } from 'src/constants';
+import { Queue } from 'bull';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +17,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,
     private readonly gu_username: GenerateUsernameService,
+    @InjectQueue(QUEUE_NAME) private readonly nunaland: Queue,
   ) {}
 
   async registerNewUser(data: RegisterDto) {
