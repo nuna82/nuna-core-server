@@ -61,6 +61,14 @@ export class AuthService {
           username: uniqueUsername,
         },
       });
+      if (new_user) {
+        await this.nunaland.add('WEProcessor', {
+          email: new_user.email,
+          title: 'Welcome to Nunaland',
+          name: new_user.name,
+        });
+        console.log('🌀 WEProcessor Job started');
+      }
       return this.jwtService.sign(
         {
           id: new_user.id,
