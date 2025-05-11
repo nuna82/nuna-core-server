@@ -25,7 +25,7 @@ export class AuthService {
       email: data.email,
       name: data.name,
     });
-    const magicLink = `${process.env.ORIGIN}/auth/verify-magic-link/?token=${token}`;
+    const magicLink = `${process.env.FROPNT_ORIGIN}/auth/verify-magic-link/?token=${token}`;
     try {
       this.mailerService.sendMail({
         to: data.email,
