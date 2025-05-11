@@ -1,4 +1,3 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -9,16 +8,17 @@ import { RequestWithUser } from 'src/interfaces/request-with-user.interface';
 import { InjectQueue } from '@nestjs/bull';
 import { QUEUE_NAME } from 'src/constants';
 import { Queue } from 'bull';
+import { MailersService } from 'src/mailers/mailers.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-    private readonly mailerService: MailerService,
+    private readonly mailersService: MailersService,
     private readonly gu_username: GenerateUsernameService,
     @InjectQueue(QUEUE_NAME) private readonly nunaland: Queue,
-  ) {}
+  ) { }
 
   async registerNewUser(data: RegisterDto) {
     const token = this.jwtService.sign({
@@ -27,19 +27,23 @@ export class AuthService {
     });
     const magicLink = `${process.env.FROPNT_ORIGIN}/auth/verify-magic-link/?token=${token}`;
     try {
-      this.mailerService.sendMail({
-        to: data.email,
-        subject: 'Nuna - Verify your email',
-        html: `
-        <h4>click the link below and verify your accaunt in easy way</h4>
+      this.mailersService.sendCode(`<h4>click the link below and verify your accaunt in easy way</h4>
         <a href="${magicLink}"> Registrate </a>
-        <p> Click the magic Link in top </p>
-        `,
-      });
+        <p> Click the magic Link in top </p>`, data.email);
       console.log(`Link successfully send to ${data.email}`);
     } catch (err) {
       console.log(`mailer error: ${err}`);
     }
+
+    // {
+    //     to: data.email,
+    //     subject: 'Nuna - Verify your email',
+    //     html: `
+    //     <h4>click the link below and verify your accaunt in easy way</h4>
+    //     <a href="${magicLink}"> Registrate </a>
+    //     <p> Click the magic Link in top </p>
+    //     `,
+    //   }
 
     return {
       success: true,
@@ -105,19 +109,21 @@ export class AuthService {
     });
     const magicLink = `${process.env.ORIGIN}/auth/verify-magic-link/?token=${token}`;
     try {
-      this.mailerService.sendMail({
-        to: data.email,
-        subject: 'Nuna - Verify your email',
-        html: `
-        <h4>click the link below and verify your accaunt in easy way</h4>
-        <a href="${magicLink}"> Registrate </a>
-        <p> Click the magic Link in top </p>
-        `,
-      });
+      this.mailersService.sendCode(`<h4>click the link below and verify your accaunt in easy way</h4>
+         <a href="${magicLink}"> Registrate </a>
+         <p> Click the magic Link in top </p>`, data.email);
       console.log(`Link successfully send to ${data.email}`);
     } catch (err) {
       console.log(`mailer error: ${err}`);
     }
+
+    // {
+    //     to: data.email,
+    //     subject: 'Nuna - Verify your email',
+    //     html: `
+    //     
+    //     `,
+    //   }
 
     return {
       success: true,

@@ -7,9 +7,11 @@ import { DCCProcessor } from './processors/decriment_collection_count.processor'
 import { CPCProcessor } from './processors/change_post_count.processor';
 import { CCPCProcessor } from './processors/change_collection_post_count.processor';
 import { WEProcessor } from './processors/welcome_email.processor';
+import { MailersModule } from '../mailers/mailers.module';
 
 @Module({
   imports: [
+    MailersModule,
     BullModule.forRoot({
       redis: {
         host: 'localhost',
