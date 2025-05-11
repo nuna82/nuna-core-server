@@ -18,7 +18,7 @@ export class AuthService {
     private readonly mailersService: MailersService,
     private readonly gu_username: GenerateUsernameService,
     @InjectQueue(QUEUE_NAME) private readonly nunaland: Queue,
-  ) { }
+  ) {}
 
   async registerNewUser(data: RegisterDto) {
     const token = this.jwtService.sign({
@@ -27,23 +27,16 @@ export class AuthService {
     });
     const magicLink = `${process.env.FROPNT_ORIGIN}/auth/verify-magic-link/?token=${token}`;
     try {
-      this.mailersService.sendCode(`<h4>click the link below and verify your accaunt in easy way</h4>
+      this.mailersService.sendCode(
+        `<h4>click the link below and verify your accaunt in easy way</h4>
         <a href="${magicLink}"> Registrate </a>
-        <p> Click the magic Link in top </p>`, data.email);
+        <p> Click the magic Link in top </p>`,
+        data.email,
+      );
       console.log(`Link successfully send to ${data.email}`);
     } catch (err) {
       console.log(`mailer error: ${err}`);
     }
-
-    // {
-    //     to: data.email,
-    //     subject: 'Nuna - Verify your email',
-    //     html: `
-    //     <h4>click the link below and verify your accaunt in easy way</h4>
-    //     <a href="${magicLink}"> Registrate </a>
-    //     <p> Click the magic Link in top </p>
-    //     `,
-    //   }
 
     return {
       success: true,
@@ -109,9 +102,12 @@ export class AuthService {
     });
     const magicLink = `${process.env.ORIGIN}/auth/verify-magic-link/?token=${token}`;
     try {
-      this.mailersService.sendCode(`<h4>click the link below and verify your accaunt in easy way</h4>
+      this.mailersService.sendCode(
+        `<h4>click the link below and verify your accaunt in easy way</h4>
          <a href="${magicLink}"> Registrate </a>
-         <p> Click the magic Link in top </p>`, data.email);
+         <p> Click the magic Link in top </p>`,
+        data.email,
+      );
       console.log(`Link successfully send to ${data.email}`);
     } catch (err) {
       console.log(`mailer error: ${err}`);
@@ -121,7 +117,7 @@ export class AuthService {
     //     to: data.email,
     //     subject: 'Nuna - Verify your email',
     //     html: `
-    //     
+    //
     //     `,
     //   }
 
