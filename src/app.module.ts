@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { CollectionsModule } from './collections/collections.module';
 import { PostsModule } from './posts/posts.module';
 import { JobsModule } from './jobs/jobs.module';
+import { MailersService } from './mailers/mailers.service';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { JobsModule } from './jobs/jobs.module';
     JobsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MailersService],
 })
 export class AppModule {}

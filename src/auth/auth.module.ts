@@ -6,9 +6,11 @@ import { GlobalModule } from 'src/global/global.module';
 import { AppJwtModule } from 'src/jwt/jwt.module';
 import { BullModule } from '@nestjs/bull';
 import { QUEUE_NAME } from 'src/constants';
+import { MailersModule } from 'src/mailers/mailers.module';
 
 @Module({
   imports: [
+    MailersModule,
     PrismaModule,
     AppJwtModule,
     GlobalModule,
@@ -17,4 +19,4 @@ import { QUEUE_NAME } from 'src/constants';
   controllers: [AuthController],
   providers: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }
