@@ -100,7 +100,7 @@ export class AuthService {
     const token = this.jwtService.sign({
       email: data.email,
     });
-    const magicLink = `${process.env.ORIGIN}/auth/verify-magic-link/?token=${token}`;
+    const magicLink = `${process.env.FRONT_ORIGIN}/auth/verify-magic-link/?token=${token}`;
     try {
       this.mailersService.sendCode(
         `<h4>click the link below and verify your accaunt in easy way</h4>
