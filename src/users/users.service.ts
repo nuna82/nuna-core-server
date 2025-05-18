@@ -19,9 +19,9 @@ export class UsersService {
     return users;
   }
 
-  async findOne(id: number) {
+  async findOne(username: string) {
     const user = await this.prisma.user.findUnique({
-      where: { id: id },
+      where: { username: username },
       include: {
         profile: true,
       },
