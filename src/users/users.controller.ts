@@ -7,7 +7,6 @@ import {
   UseGuards,
   Req,
   Put,
-  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -31,7 +30,7 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Put('/update/:id')
   update(
-    @Query('id') id: string,
+    @Param('id') id: string,
     @Body() data: UpdateUserDto,
     @Req() req: RequestWithUser,
   ) {
