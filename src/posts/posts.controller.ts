@@ -51,4 +51,22 @@ export class PostsController {
   remove(@Req() req: RequestWithUser, @Param('id') id: string) {
     return this.postsService.remove(req, +id);
   }
+
+  @Get('/user/:id')
+  getUsersPosts(
+    @Query('skip') skip: string,
+    @Query('take') take: string,
+    @Param('id') id: string,
+  ) {
+    return this.postsService.getUsersPosts(+skip || 0, +take || 10, +id);
+  }
+
+  @Get('/user/mine')
+  getMyPosts(
+    @Query('skip') skip: string,
+    @Query('take') take: string,
+    @Req() req: RequestWithUser,
+  ) {
+    return this.postsService.getMyPosts(+skip || 0, +take || 10, req);
+  }
 }

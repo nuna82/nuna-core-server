@@ -171,4 +171,47 @@ export class PostsService {
       throw new HttpException(`error in post removing setion:`, 404);
     }
   }
+
+  async getUsersPosts(skip: number, take: number, id: number) {
+    if (skip > take) {
+      throw new HttpException('take should be greater then skip', 404);
+    }
+
+    const posts = await this.prisma.post.findMany({
+      where: { id: id },
+      skip,
+      take,
+      include: {
+        images: true,
+      },
+    });
+
+    if (!posts) {
+      throw new HttpException('server error', 404);
+    }
+
+    return posts;
+  }
+
+  async getMyPosts(skip: number, take: number, req: RequestWithUser) {
+    const id = req.user.id;
+    if (skip > take) {
+      throw new HttpException('take should be greater then skip', 404);
+    }
+
+    const posts = this.prisma.post.findMany({
+      where: { id: id },
+      skip,
+      take,
+      include: {
+        images: true,
+      },
+    });
+
+    if (!posts) {
+      throw new HttpException('server error', 404);
+    }
+
+    return posts;
+  }
 }
